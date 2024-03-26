@@ -68,7 +68,7 @@ int main(int argc, char** argv){
    //cout << exp ( -M.V(q) ) << endl;
 
 
-   size_t T      = 2e7;          // number of MCMC steps
+   size_t T      = 2e6;          // number of MCMC steps
    double neps   = 1.e-10;       // convergence tolerance for Newton projection
    double rrc    = 1.e-8;        // closeness criterion for the reverse check
    int itm       = 6;            // maximum number of Newtons iterations
@@ -86,7 +86,7 @@ int main(int argc, char** argv){
    double eps    = 1.0 / sqrt(2.0*beta);        // squish parameter
    
    int Nsoft = 1;          // number of Soft moves for MCMC step
-   int Nrattle = 3;        // number of RATTLE integrator time steps for each MCMC step
+   int Nrattle = 0;        // number of RATTLE integrator time steps for each MCMC step
    
    double kq  = 0.7;       // factor for Soft Position proposal standard dev.
    double sq  = kq*eps;    // standard dev. for Soft Position proposal

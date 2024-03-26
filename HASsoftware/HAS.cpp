@@ -262,30 +262,33 @@ void HASampler(      vector<double>& chain,        /* Position Samples output fr
          }
          
       } // end of Soft Metropolis move
-      
-      //------------------------------------------------------------Thermostat half step-------------------------------------------------------------
-      
-      if (LangevinROLL){
-         
-         for (unsigned int k = 0; k < d; k++){  // Sample Isotropic Standard Gaussian
-            Z[k] = SN(RG);
-         }
-         
-         gtygy = trans( gxiq ) * gxiq;          // compute matrix for momentum step projection: gxi(q)^t gxi(q)
-         c1    = 1. - ( gamma * dt * 0.25 );
-         c2    = sqrt( gamma * dt );
-         r     = - trans( gxiq ) * ( c1 * p + c2 * Z );   // right hand side of linear system for projection
-         solve( gtygy, da, r);                            // solve linear system for projection onto Tq
-         
-         c3 = 1. / ( 1. + ( gamma * dt * 0.25 ) );
-         pn = c3 * ( c1 * p + c2 * Z + gxiq * da);        // thermostat momentum step
-         
-         p = pn;    // update momentum
-      }
-      
-      //---------------------------------------------------------------RATTLE steps------------------------------------------------------------------
+   
+      //----------------------------------------------------------Langevin / Hamiltonian move---------------------------------------------------------
       
       if ( Nrattle  > 0 ){
+         
+      //------------------------------------------------------------Thermostat half step--------------------------------------------------------------
+         
+         if (LangevinROLL){
+            
+            for (unsigned int k = 0; k < d; k++){  // Sample Isotropic Standard Gaussian
+               Z[k] = SN(RG);
+            }
+            
+            gtygy = trans( gxiq ) * gxiq;          // compute matrix for momentum step projection: gxi(q)^t gxi(q)
+            c1    = 1. - ( gamma * dt * 0.25 );
+            c2    = sqrt( gamma * dt );
+            r     = - trans( gxiq ) * ( c1 * p + c2 * Z );   // right hand side of linear system for projection
+            solve( gtygy, da, r);                            // solve linear system for projection onto Tq
+            
+            c3 = 1. / ( 1. + ( gamma * dt * 0.25 ) );
+            pn = c3 * ( c1 * p + c2 * Z + gxiq * da);        // thermostat momentum step
+            
+            p = pn;    // update momentum
+            
+         }  // end of thermostat (momentum) move
+      
+      //----------------------------------------------------------------RATTLE steps-----------------------------------------------------------------
          
          stats-> HardSample++;     // one Rattle move
          
@@ -498,27 +501,29 @@ void HASampler(      vector<double>& chain,        /* Position Samples output fr
             
             p = - p;   // very important: apply ** MOMENTUM REVERSAL ** in the rejection step !!
             
-         }
-      }  // end of RATTLE move
+         } // end of RATTLE steps
       
       //------------------------------------------------------------Thermostat half step-------------------------------------------------------------
       
-      if (LangevinROLL){
+         if (LangevinROLL){
+            
+            for (unsigned int k = 0; k < d; k++){  // Sample Isotropic Standard Gaussian
+               Z[k] = SN(RG);
+            }
+            
+            gtygy = trans( gxiq ) * gxiq;          // compute matrix for momentum step projection: gxi(q)^t gxi(q)
+            r     = - trans( gxiq ) * ( c1 * p + c2 * Z );   // right hand side of linear system for projection
+            solve( gtygy, da, r);                            // solve linear system for projection onto Tq
+            
+            pn = c3 * ( c1 * p + c2 * Z + gxiq * da);        // thermostat momentum step
+            
+            p = pn;    // update momentum
+            
+         } // end of thermostat (momentum) move
          
-         for (unsigned int k = 0; k < d; k++){  // Sample Isotropic Standard Gaussian
-            Z[k] = SN(RG);
-         }
+      }  // end of Langevin / Hamiltonian move
          
-         gtygy = trans( gxiq ) * gxiq;          // compute matrix for momentum step projection: gxi(q)^t gxi(q)
-         r     = - trans( gxiq ) * ( c1 * p + c2 * Z );   // right hand side of linear system for projection
-         solve( gtygy, da, r);                            // solve linear system for projection onto Tq
-         
-         pn = c3 * ( c1 * p + c2 * Z + gxiq * da);        // thermostat momentum step
-         
-         p = pn;    // update momentum
-      }
       
-         
       if ( Nsoft == 0 ){  // ONLY FOR DEBUGGING : store the sample when number of Soft moves = 0
          Nsample++;
          for ( int k = 0; k < d; k++){
