@@ -6,7 +6,7 @@
 # 3- WarpedTorus3D_V
 # 4- DoubleWell2D_ExtendedVar
 
-ModelDir = models/DoubleWell2D_ExtendedVar
+ModelDir = models/WarpedTorus3D_V
 
 mainExec : main.o model.o HAS.o
 	g++ -std=c++14 -lclapack main.o model.o HAS.o -o mainExec

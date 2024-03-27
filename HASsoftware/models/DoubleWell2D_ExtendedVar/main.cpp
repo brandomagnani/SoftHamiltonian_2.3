@@ -85,8 +85,10 @@ int main(int argc, char** argv){
    double beta   = 1000.0;                      // squish parameter, beta = 1 / 2*eps^2
    double eps    = 1.0 / sqrt(2.0*beta);        // squish parameter
    
+   double gamma = 1.;        // friction coefficient for thermostat part in Langevin dynamics
+   
    int Nsoft = 1;          // number of Soft moves for MCMC step
-   int Nrattle = 0;        // number of RATTLE integrator time steps for each MCMC step
+   int Nrattle = 3;        // number of RATTLE integrator time steps for each MCMC step
    
    double kq  = 0.7;       // factor for Soft Position proposal standard dev.
    double sq  = kq*eps;    // standard dev. for Soft Position proposal
@@ -95,9 +97,6 @@ int main(int argc, char** argv){
    double sp  = kp*eps;    // standard dev. for Soft Momentum proposal
    
    double dt  = 0.3;       // time step size in RATTLE integrator
-   
-   double kg    = 1.0;     // factor for gamma below
-   double gamma = 1.0;     // friction coefficient for thermostat part in Langevin dynamics
    
    bool gradRATTLE   = true;  // if True, use grad V in RALLTE steps; if False, set grad V = 0 in RATTLE steps
    bool LangevinROLL = true;  // if True, use the Langevin ROLL algorithm; if False, use plain ROLL
@@ -257,7 +256,13 @@ int main(int argc, char** argv){
    OutputFile << OutputString << endl;
    StringLength = snprintf( OutputString, sizeof(OutputString),"sp = %10.5e", sp);
    OutputFile << OutputString << endl;
-   StringLength = snprintf( OutputString, sizeof(OutputString),"gamma = %10.5e", gamma);
+   StringLength = snprintf( OutputString, sizeof(OutputString),"gamma_q = %10.5e", gamma_q);
+   OutputFile << OutputString << endl;
+   StringLength = snprintf( OutputString, sizeof(OutputString),"gamma_s = %10.5e", gamma_s);
+   OutputFile << OutputString << endl;
+   StringLength = snprintf( OutputString, sizeof(OutputString),"beta_q = %10.5e", beta_q);
+   OutputFile << OutputString << endl;
+   StringLength = snprintf( OutputString, sizeof(OutputString),"beta_s = %10.5e", beta_s);
    OutputFile << OutputString << endl;
    StringLength = snprintf( OutputString, sizeof(OutputString),"dt = %10.5e", dt);
    OutputFile << OutputString << endl;

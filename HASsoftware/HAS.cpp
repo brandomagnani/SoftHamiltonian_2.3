@@ -95,6 +95,10 @@ void HASampler(      vector<double>& chain,        /* Position Samples output fr
    double c2;   // coefficient 2 in thermostat momentum step
    double c3;   // coefficient 3 in thermostat momentum step
    
+   double c1_s;   // coefficient 1 in thermostat (extended var) momentum step
+   double c2_s;   // coefficient 2 in thermostat (extended var) momentum step
+   double c3_s;   // coefficient 3 in thermostat (extended var) momentum step
+   
    double Uq;      // |xi(q)|^2
    double Uqn;     // |xi(qn)|^2
    double A;       //  Metropolis ratio
@@ -282,8 +286,8 @@ void HASampler(      vector<double>& chain,        /* Position Samples output fr
             solve( gtygy, da, r);                            // solve linear system for projection onto Tq
             
             c3 = 1. / ( 1. + ( gamma * dt * 0.25 ) );
-            pn = c3 * ( c1 * p + c2 * Z + gxiq * da);        // thermostat momentum step
-            
+            pn = c3 * ( c1 * p + c2 * Z + gxiq * da );        // thermostat momentum step
+                  
             p = pn;    // update momentum
             
          }  // end of thermostat (momentum) move
@@ -513,9 +517,9 @@ void HASampler(      vector<double>& chain,        /* Position Samples output fr
             
             gtygy = trans( gxiq ) * gxiq;          // compute matrix for momentum step projection: gxi(q)^t gxi(q)
             r     = - trans( gxiq ) * ( c1 * p + c2 * Z );   // right hand side of linear system for projection
-            solve( gtygy, da, r);                            // solve linear system for projection onto Tq
+            solve( gtygy, da, r );                           // solve linear system for projection onto Tq
             
-            pn = c3 * ( c1 * p + c2 * Z + gxiq * da);        // thermostat momentum step
+            pn = c3 * ( c1 * p + c2 * Z + gxiq * da );       // thermostat momentum step
             
             p = pn;    // update momentum
             
