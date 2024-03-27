@@ -95,10 +95,6 @@ void HASampler(      vector<double>& chain,        /* Position Samples output fr
    double c2;   // coefficient 2 in thermostat momentum step
    double c3;   // coefficient 3 in thermostat momentum step
    
-   double c1_s;   // coefficient 1 in thermostat (extended var) momentum step
-   double c2_s;   // coefficient 2 in thermostat (extended var) momentum step
-   double c3_s;   // coefficient 3 in thermostat (extended var) momentum step
-   
    double Uq;      // |xi(q)|^2
    double Uqn;     // |xi(qn)|^2
    double A;       //  Metropolis ratio
